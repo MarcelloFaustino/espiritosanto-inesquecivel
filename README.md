@@ -34,26 +34,3 @@ ou
 
 ---
 
-## 🎨 **Paleta de cores e identidade visual**
-
-A estética do projeto é inspirada na harmonia natural do Espírito Santo:
-
-| Elemento | Cor | Emoção Transmitida |
-|-----------|------|--------------------|
-| 🌊 Azul Turquesa (`#0097A7`) | Frescor, liberdade, mar |
-| ☀️ Amarelo Dourado (`#FFD54F`) | Calor, energia, sol capixaba |
-| 🌿 Verde Claro (`#EAF8F9`) | Natureza, leveza, paz |
-| ⚫ Cinza Chumbo (`#333333`) | Elegância e equilíbrio |
-
----
-
-## 💻 **Tecnologias utilizadas**
-
-- **HTML5 + CSS3 + JavaScript (Leaflet.js)**  
-- **Mapa interativo OpenStreetMap**  
-- **Animações CSS personalizadas**  
-- **QR Code dinâmico via API**  
-- **Design responsivo e moderno**
-
----
-
