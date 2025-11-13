@@ -1,1 +1,137 @@
-<!DOCTYPE html> <html lang="pt-BR"> <head> <meta charset="UTF-8" /> <title>Mapa Interativo — Destinos Incríveis do Sul</title> <meta name="description" content="Mapa interativo dos principais destinos do Sul do Brasil: Gramado, Canela, Vale dos Vinhedos, Torres e outros." /> <meta name="viewport" content="width=device-width, initial-scale=1.0" /> <!-- Fonte Poppins (carregada porque o CSS refere-se a ela) --> <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet"> <!-- CSS do Leaflet --> <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" /> <style> /* Garantir que o mapa ocupe a altura disponível corretamente */ html, body { height: 100%; margem: 0; } body { font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: #f7f7f7; color: #2c3e50; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; display: flex; flex-direction: column; align-items: stretch; } header { text-align: center; padding: 18px 12px; } h1 { margin: 0; font-size: 1.4rem; font-weight: 600; } main { flex: 1 1 auto; padding: 12px; } #map { height: calc(100vh - 120px); /* ocupa a área visível exceto cabeçalho/rodapé */ width: 100%; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); overflow: hidden; } .leaflet-popup-content-wrapper { border-radius: 8px; background-color: #fffdfc; } footer { text-align: center; padding: 10px 12px; font-size: 0.9rem; color: #586270; } @media (max-width: 480px) { #map { height: calc(100vh - 140px); border-radius: 8px; } h1 { font-size: 1.1rem; } } </style> </head> <body> <header> <h1>🌎Imperdíveis no Sul do Brasil</h1> <p style="margin:6px 0 0; color:#617483; font-size:0.95rem;">Toque ou clique nos destinos para saber mais</p> </header> <main> <div id="map" role="application" aria-label="Mapa Destinos com destinos do Sul do Brasil"></div> <noscript style="display:block; margin-top:8px color:#a94442;"> Este site funciona melhor com JavaScript habilitado. Por favor, habilite o JavaScript no seu navegador.</noscript> </main> <footer> Mapa gerado com Leaflet • Dados de exemplo • Repositório: <a href="https://github.com/MarcelloFaustino/espiritosanto-inesquecivel" target="_blank" rel="noopener noreferrer">espiritosanto-inesquecivel</a> </footer> <!-- Scripts do Leaflet --> <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script> <script> // Inicializa o mapa (centro aproximado entre Gramado/Canela/Região) var map = L.map('map').setView([-29.36, -50.87], 10); // Camada base (OpenStreetMap) L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { atribuição: '© <a href="https://www.openstreetmap.org/">OpenStreetMap</a> e colaboradores' }).addTo(map); // Marcadores dos destinos var destinos = [ { nome: "Centro de Gramado", coords: [-29.3784, -50.8739], desc: "O coração turístico da Serra Gaúcha, cheio de charme e gastronomia." }, { nome: "Lago Negro (Gramado)", coordenadas: [-29.3822, -50.8615], desc: "Cartão-postal de Gramado, rodeado por pinheiros e flores." }, { nome: "Parque do Caracol (Canela)", coords: [-29.3196, -50.8576], desc: "Lar da imponente Cascata do Caracol, com fácil acesso por mirantes e trilhas." }, { nome: "Mundo a Vapor (Canela)", coords: [-29.3635, -50.8295], desc: "Parque temático com réplicas de máquinas a vapor e miniaturas em movimento." }, { nome: "Rua Coberta (Gramado)", coords: [-29.3787, -50.8762], desc: "Rua charmosa com cafés, restaurantes e programação cultural." }, { nome: "Aldeia do Papai Noel (Gramado)", coords: [-29.3798, -50.8752], desc: "Atração natalina permanente com decoração temática e neve artificial em épocas especiais." }, { nome: "Vale dos Vinhedos", coords: [-29.1183, -51.5788], desc: "Região de vinícolas entre Bento Gonçalves e Garibaldi — ideal para degustação e enoturismo." }, { nome: "Praia de Torres", coords: [-29.3343, -49.7265], desc: "Praia conhecida por suas falésias e belas paisagens litorâneas." } ]; // Adiciona marcadores ao mapa com pop-ups acessíveis destinos.forEach(function(dest) { L.marker(dest.coords) .addTo(map) .bindPopup('<strong>' + dest.nome + '</strong><br>' + dest.desc, { minWidth: 160 }); }); </script> </body> </html> ```
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Roteiro Gastronômico — Gramado</title>
+
+  <!-- Meta tags para SEO -->
+  <meta name="description" content="Explore o melhor da gastronomia de Gramado — roteiro visual com mapa interativo, dicas e restaurantes imperdíveis.">
+  <meta name="author" content="Marcello Victor">
+  <meta name="theme-color" content="#0f1724" />
+
+  <!-- Leaflet CSS -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-sA+g6m0wT4p0rjv6kGmM0hFQWvGqk6vT9j+g1Hc3y+M="
+    crossorigin=""
+  />
+
+  <style>
+    :root {
+      --bg: #0f1724;
+      --card: #0b1220;
+      --accent: #c76b2a;
+      --muted: #9aa4b2;
+      --glass: rgba(255, 255, 255, 0.04);
+    }
+    * {
+      box-sizing: border-box;
+      font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    }
+    html, body, #app {
+      height: 100%;
+      margin: 0;
+      background: linear-gradient(180deg, #081024 0%, #07142a 60%);
+      color: #e6eef6;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 22px 28px;
+      flex-wrap: wrap;
+    }
+    .brand {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+    }
+    .logo {
+      width: 56px;
+      height: 56px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent), #efc07e);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #081024;
+      font-weight: 700;
+      font-size: 20px;
+      box-shadow: 0 6px 24px rgba(199, 107, 42, 0.14);
+    }
+    h1 {
+      margin: 0;
+      font-size: 20px;
+    }
+    p.lead {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    main {
+      display: grid;
+      grid-template-columns: 420px 1fr;
+      gap: 24px;
+      padding: 18px;
+    }
+
+    .panel {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent);
+      border-radius: 14px;
+      padding: 18px;
+      backdrop-filter: blur(6px);
+      box-shadow: 0 4px 30px rgba(2, 6, 23, 0.6);
+    }
+
+    .itinerary-day {
+      border-radius: 10px;
+      padding: 12px;
+      background: var(--glass);
+      margin-bottom: 12px;
+      transition: transform 0.35s ease, box-shadow 0.25s ease;
+    }
+    .itinerary-day:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 8px 30px rgba(3, 8, 20, 0.6);
+    }
+
+    .day-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .day-bullet {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: linear-gradient(180deg, #fff0ea, #ffe8d2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #3b1d07;
+      font-weight: 700;
+    }
+    .small {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .map-wrap {
+      height: 78vh;
+      border-radius: 14px;
+      overflow: hidden;
+      position: relative;
+    }
+    #map {
+      width: 100%;
+      height: 100%;
+    }
+    .map-controls {
+      position: absolute;
+      le
+
+      
