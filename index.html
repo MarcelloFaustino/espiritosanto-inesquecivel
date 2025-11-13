@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Mapa Interativo - Destinos Incríveis do Sul</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Fonte -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <!-- CSS do Leaflet (versão específica para evitar incompatibilidades) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    body {
+      margin: 0;
+      font-family: "Poppins", sans-serif;
+      background: #f7f7f7;
+      text-align: center;
+    }
+    h1 {
+      margin: 20px;
+      color: #2c3e50;
+    }
+    /* Define a altura do mapa para ocupar a maior parte da viewport */
+    #map {
+      height: 90vh;
+      width: 100%;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      margin: 0 auto;
+    }
+    .leaflet-popup-content-wrapper {
+      border-radius: 8px;
+      background-color: #fffdfc;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🌎 Destinos Imperdíveis no Sul do Brasil</h1>
+  <div id="map"></div>
+
+  <!-- Script do Leaflet (versão correspondente ao CSS acima) -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    // Inicialização do mapa (não setamos view fixa ainda para podermos ajustar ao conjunto de marcadores)
+    var defaultCenter = [-29.365, -50.875];
+    var defaultZoom = 10;
+    var map = L.map('map').setView(defaultCenter, defaultZoom);
+
+    // Camada base (OpenStreetMap)
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '© <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contribuidores'
+    }).addTo(map);
+
+    // Lista de destinos (cada coords é [lat, lng])
+    var destinos = [
+      { nome: "Centro de Gramado", coords: [-29.3784, -50.8739], desc: "O coração turístico da Serra Gaúcha, cheio de charme e gastronomia." },
+      { nome: "Lago Negro", coords: [-29.3822, -50.8615], desc: "Um dos cartões-postais mais famosos de Gramado, rodeado por pinheiros e flores." },
+      { nome: "Parque do Caracol - Canela", coords: [-29.3196, -50.8576], desc: "Lar da impressionante Cascata do Caracol, com 131 metros de altura." },
+      { nome: "Mundo a Vapor", coords: [-29.3635, -50.8295], desc: "Parque temático que recria o universo das máquinas a vapor com miniaturas em movimento." },
+      { nome: "Rua Coberta", coords: [-29.3787, -50.8762], desc: "Uma rua charmosa com cafés e eventos, ideal para um passeio romântico." },
+      { nome: "Aldeia do Papai Noel", coords: [-29.3798, -50.8752], desc: "A casa oficial do Bom Velhinho no Brasil, com neve artificial e decorações natalinas." },
+      { nome: "Vale dos Vinhedos", coords: [-29.1183, -51.5788], desc: "Região encantadora de vinícolas e gastronomia, entre Bento Gonçalves e Garibaldi." },
+      { nome: "Praia de Torres", coords: [-29.3343, -49.7265], desc: "Uma das praias mais belas do Sul, com falésias e mar azul intenso." }
+    ];
+
+    // Adiciona marcadores e cria um grupo para ajustar o mapa automaticamente
+    var markers = destinos.map(function(dest) {
+      var m = L.marker(dest.coords, { title: dest.nome })
+        .addTo(map)
+        .bindPopup('<b>' + dest.nome + '</b><br>' + dest.desc);
+      // mostrar nome curto ao passar o mouse
+      m.bindTooltip(dest.nome, {permanent: false, direction: 'top'});
+      return m;
+    });
+
+    // Ajusta a visualização para caber todos os marcadores.
+    // Se houver apenas um marcador, usamos um zoom padrão mais próximo.
+    try {
+      var group = L.featureGroup(markers);
+      if (group.getBounds().isValid()) {
+        // Se todos os pontos são muito próximos, o fitBounds pode dar zoom exagerado — adicionamos padding
+        map.fitBounds(group.getBounds(), { padding: [50, 50] });
+        // Se a área é muito pequena (por exemplo, todos em um ponto), definimos um zoom mínimo aceitável
+        var currentZoom = map.getZoom();
+        if (currentZoom > 15) map.setZoom(15);
+      } else {
+        // fallback: se algo deu errado com os bounds, posiciona no centro padrão
+        map.setView(defaultCenter, defaultZoom);
+      }
+    } catch (err) {
+      console.error('Erro ao ajustar bounds do mapa:', err);
+      map.setView(defaultCenter, defaultZoom);
+    }
+
+    // Dicas de debug: abra o console do navegador (F12) se os marcadores não aparecerem
+    // - Verifique erros de rede (recursos não carregados)
+    // - Verifique se as coordenadas estão corretas (lat, lng)
+    // - 'map.fitBounds' garante que todos os marcadores fiquem visíveis na tela
+  </script>
+
+</body>
+</html>
