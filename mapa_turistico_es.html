@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Espírito Santo Inesquecível — Mapa Interativo</title>
+  <link rel="shortcut icon" href="data:;base64,iVBORw0KGgo=">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-sA+e2k6CkXk2G5r4v1Nmo+gJbQKk2mYp0h3f3b9g0oM="
+    crossorigin=""/>
+  <style>
+    html,body,#map { height: 100%; margin: 0; padding: 0; }
+    body { font-family: Arial, Helvetica, sans-serif; }
+    .legend {
+      background: rgba(255,255,255,0.95);
+      padding: 10px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+      max-width: 320px;
+      font-size: 14px;
+    }
+    .title {
+      font-weight:700;
+      color:#2F2F2F;
+      margin-bottom:6px;
+    }
+    .subtitle {
+      color:#1FA2FF;
+      font-weight:600;
+      margin-bottom:8px;
+    }
+    .popup-img {
+      width:100%;
+      height:140px;
+      object-fit:cover;
+      border-radius:4px;
+      margin-bottom:6px;
+    }
+    .qr-note {
+      margin-top:8px;
+      font-size:12px;
+      color:#555;
+    }
+    .attribution {
+      position: absolute;
+      left: 10px;
+      bottom: 10px;
+      z-index: 1000;
+      background: rgba(255,255,255,0.9);
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.12);
+    }
+  </style>
+</head>
+<body>
+<div id="map"></div>
+<div class="attribution">Espírito Santo Inesquecível — Os 20 destinos que você precisa viver</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+  integrity="sha256-o9N1j7kG6o3Z2M3nW3q4JfQe8b9y1s6rHcV+q5gGI0c="
+  crossorigin=""></script>
+<script>
+  // Inicializa o mapa
+  var map = L.map('map').setView([-20.4, -40.5], 8);
+
+  // Camada base
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 18,
+    attribution: '&copy; OpenStreetMap contributors'
+  }).addTo(map);
+
+  // Dados dos destinos (nome, lat, lon, tema, descricao, imagem)
+  var destinos = [
+    ["Parque Nacional do Caparaó", -20.4331, -41.8300, "Aventura & Natureza", "Lar do Pico da Bandeira, trilhas e vistas inesquecíveis.", "https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1200&q=60"],
+    ["Domingos Martins / Pedra Azul", -20.4044, -40.6592, "Romance & Montanha", "Clima ameno, pousadas charmosas e a famosa Pedra Azul.", "https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1200&q=60"],
+    ["Guarapari", -20.6770, -40.4987, "Sol & Praia", "Praias, vida noturna e areias monazíticas.", "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=60"],
+    ["Itaúnas", -18.4074, -39.7093, "Cultura & Tradição", "Dunas, forró e um litoral rústico que encanta.", "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=60"],
+    ["Pancas", -19.2250, -40.8550, "Aventura & Escalada", "Formações rochosas e esportes radicais.", "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=1200&q=60"],
+    ["Vila Velha / Convento da Penha", -20.3297, -40.2925, "História & Espiritualidade", "Vista panorâmica e patrimônio histórico.", "https://images.unsplash.com/photo-1509228627152-3b3c9e17b7b2?auto=format&fit=crop&w=1200&q=60"],
+    ["Morro do Moreno", -20.3260, -40.2850, "Trilha & Mirante", "Por do sol e vista para Vitória e Vila Velha.", "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=60"],
+    ["Parque Estadual da Pedra Azul", -20.4050, -40.6490, "Ecoturismo & Relax", "Trilhas e piscinas naturais em ambiente protegido.", "https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1200&q=60"],
+    ["Gruta do Limoeiro (Castelo)", -20.6044, -41.1960, "Mistério & Natureza", "Formações de caverna e paisagens únicas.", "https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=1200&q=60"],
+    ["Santa Teresa", -19.9361, -40.5973, "Cultura & Gastronomia", "Roteiros rurais, cafés e vinhos locais.", "https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=1200&q=60"],
+    ["Praia de Meaípe (Guarapari)", -20.7430, -40.5155, "Sol & Sabor", "Gastronomia à beira-mar e paisagens relaxantes.", "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=60"],
+    ["Parque Estadual Paulo César Vinha", -20.7300, -40.5060, "Natureza & Sustentabilidade", "Lagoas e restinga preservadas próximas às praias.", "https://images.unsplash.com/photo-1491553895911-0055eca6402d?auto=format&fit=crop&w=1200&q=60"],
+    ["Ilhas Itatiaia (Vila Velha)", -20.3240, -40.2580, "Mergulho & Aventura", "Piscinas naturais e vida marinha para explorar.", "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=60"],
+    ["Falésias de Marataízes", -21.0433, -40.8295, "Fotografia & Relax", "Falésias coloridas com visual dramático ao mar.", "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=60"],
+    ["Vale do Empoçado (Afonso Cláudio)", -20.0785, -41.1265, "Rural & Cachoeiras", "Cenários bucólicos e cachoeiras escondidas.", "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=1200&q=60"],
+    ["Cachoeira Véu da Noiva (Santa Leopoldina)", -20.0981, -40.5280, "Natureza & Romance", "Cachoeira impressionante e vegetação exuberante.", "https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=1200&q=60"],
+    ["Pico do Forno Grande (Castelo)", -20.6030, -41.1520, "Aventura & Altitude", "Trilhas desafiadoras e vista panorâmica.", "https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1200&q=60"],
+    ["Ilha das Caieiras", -20.2858, -40.3123, "Gastronomia & Cultura Local", "Vila de pescadores com culinária tradicional.", "https://images.unsplash.com/photo-1526481280698-0b4c0b4b8d57?auto=format&fit=crop&w=1200&q=60"],
+    ["Manguinhos (Serra)", -20.1290, -40.1745, "Família & Lazer", "Praia tranquila com estrutura familiar.", "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=60"],
+    ["Grande Buda de Ibiraçu", -19.8300, -40.3660, "Espiritualidade & Paz Interior", "Estátua monumental e ambiente de contemplação.", "https://images.unsplash.com/photo-1526481280698-0b4c0b4b8d57?auto=format&fit=crop&w=1200&q=60"]
+  ];
+
+  // Função para criar popup com imagem e texto
+  function createPopup(d) {
+    var html = '<div style="width:260px">';
+    html += '<div class="title">'+d[0]+'</div>';
+    html += '<div class="subtitle">'+d[3]+'</div>';
+    html += '<img class="popup-img" src="'+d[5]+'" alt="'+d[0]+'">';
+    html += '<div>'+d[4]+'</div>';
+    html += '<div class="qr-note">Toque no ícone para mais detalhes e para abrir o mapa completo.</div>';
+    html += '</div>';
+    return html;
+  }
+
+  // Adiciona marcadores
+  destinos.forEach(function(d){
+    var marker = L.marker([d[1], d[2]]).addTo(map);
+    marker.bindPopup(createPopup(d));
+  });
+
+  // Ajusta bounds para mostrar todos os pontos
+  var latlngs = destinos.map(function(d){ return [d[1], d[2]]; });
+  var bounds = L.latLngBounds(latlngs);
+  map.fitBounds(bounds.pad(0.1));
+</script>
+</body>
+</html>
