@@ -1,338 +1,69 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Roteiro Gastronômico — Gramado</title>
-
-  <!-- Meta tags para SEO -->
-  <meta name="description" content="Explore o melhor da gastronomia de Gramado — roteiro visual com mapa interativo, dicas e restaurantes imperdíveis.">
-  <meta name="author" content="Marcello Victor">
-  <meta name="theme-color" content="#0f1724" />
-  <link rel="icon" href="data:," />
-
-  <!-- Leaflet CSS -->
-  <link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    integrity="sha256-sA+g6m0wT4p0rjv6kGmM0hFQWvGqk6vT9j+g1Hc3y+M="
-    crossorigin=""
-  />
-
+  <meta charset="UTF-8">
+  <title>Mapa Interativo - Destinos Incríveis do Sul</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- CSS do Leaflet -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
   <style>
-    :root {
-      --bg: #0f1724;
-      --card: #0b1220;
-      --accent: #c76b2a;
-      --muted: #9aa4b2;
-      --glass: rgba(255, 255, 255, 0.04);
-      --focus: 3px;
-    }
-    * {
-      box-sizing: border-box;
-      font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-    }
-    html, body, #app {
-      height: 100%;
+    body {
       margin: 0;
-      background: linear-gradient(180deg, #081024 0%, #07142a 60%);
-      color: #e6eef6;
-    }
-
-    header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 18px 28px;
-      gap: 16px;
-      flex-wrap: wrap;
-    }
-    .brand {
-      display: flex;
-      gap: 14px;
-      align-items: center;
-    }
-    .logo {
-      width: 56px;
-      height: 56px;
-      border-radius: 12px;
-      background: linear-gradient(135deg, var(--accent), #efc07e);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #081024;
-      font-weight: 700;
-      font-size: 20px;
-      box-shadow: 0 6px 24px rgba(199, 107, 42, 0.14);
-    }
-    h1 {
-      margin: 0;
-      font-size: 20px;
-    }
-    p.lead {
-      margin: 0;
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    main {
-      display: grid;
-      grid-template-columns: 420px 1fr;
-      gap: 24px;
-      padding: 18px;
-      align-items: start;
-    }
-
-    .panel {
-      background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent);
-      border-radius: 14px;
-      padding: 18px;
-      backdrop-filter: blur(6px);
-      box-shadow: 0 4px 30px rgba(2, 6, 23, 0.6);
-    }
-
-    .itinerary-day {
-      border-radius: 10px;
-      padding: 12px;
-      background: var(--glass);
-      margin-bottom: 12px;
-      transition: transform 0.35s ease, box-shadow 0.25s ease;
-    }
-    .itinerary-day:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 8px 30px rgba(3, 8, 20, 0.6);
-    }
-
-    .day-title {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .day-bullet {
-      width: 40px;
-      height: 40px;
-      border-radius: 10px;
-      background: linear-gradient(180deg, #fff0ea, #ffe8d2);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #3b1d07;
-      font-weight: 700;
-    }
-    .small {
-      font-size: 13px;
-      color: var(--muted);
-    }
-
-    .map-wrap {
-      height: 78vh;
-      border-radius: 14px;
-      overflow: hidden;
-      position: relative;
-    }
-    #map {
-      width: 100%;
-      height: 100%;
-      display: block;
-    }
-
-    /* Controles do mapa (UI) */
-    .map-controls {
-      position: absolute;
-      left: 18px;
-      top: 18px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      z-index: 1000;
-    }
-    .map-btn {
-      background: rgba(3,6,20,0.7);
-      color: #e6eef6;
-      border: 1px solid rgba(255,255,255,0.04);
-      padding: 8px 10px;
-      border-radius: 10px;
-      cursor: pointer;
-      font-size: 13px;
-      min-width: 44px;
+      font-family: "Poppins", sans-serif;
+      background: #f7f7f7;
       text-align: center;
     }
-    .map-btn:focus {
-      outline: none;
-      box-shadow: 0 0 0 var(--focus) rgba(199,107,42,0.16);
-      border-color: var(--accent);
+    h1 {
+      margin: 20px;
+      color: #2c3e50;
     }
-    .map-legend {
-      position: absolute;
-      right: 18px;
-      bottom: 18px;
-      background: rgba(2,6,23,0.6);
-      color: #e6eef6;
-      padding: 10px 12px;
-      border-radius: 10px;
-      font-size: 13px;
-      z-index: 800;
+    #map {
+      height: 90vh;
+      width: 100%;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
     }
-
-    /* Responsividade */
-    @media (max-width: 900px) {
-      main {
-        grid-template-columns: 1fr;
-        padding: 12px;
-      }
-      .map-wrap {
-        height: 60vh;
-      }
+    .leaflet-popup-content-wrapper {
+      border-radius: 8px;
+      background-color: #fffdfc;
     }
   </style>
 </head>
 <body>
-  <div id="app" role="application" aria-label="Roteiro Gastronômico - Gramado">
-    <header>
-      <div class="brand">
-        <div class="logo" aria-hidden="true">RG</div>
-        <div>
-          <h1>Roteiro Gastronômico — Gramado</h1>
-          <p class="lead">Mapa interativo e recomendações locais</p>
-        </div>
-      </div>
-      <div class="meta small" aria-hidden="true">Atualizado em 2025</div>
-    </header>
 
-    <main>
-      <aside class="panel" aria-labelledby="itinerario-title">
-        <h2 id="itinerario-title">Itinerário sugerido</h2>
+  <h1>🌎 Destinos Imperdíveis no Sul do Brasil</h1>
+  <div id="map"></div>
 
-        <div class="itinerary-day" tabindex="0">
-          <div class="day-title">
-            <div class="day-bullet">1</div>
-            <div>
-              <div><strong>Dia 1 — Centro & Chocolaterias</strong></div>
-              <div class="small">Café da manhã, caminhada pelo centro e degustação de chocolates artesanais.</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="itinerary-day" tabindex="0">
-          <div class="day-title">
-            <div class="day-bullet">2</div>
-            <div>
-              <div><strong>Dia 2 — Vinícolas e Fondue</strong></div>
-              <div class="small">Visita a vinícolas locais e jantar com fondue típico.</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="itinerary-day" tabindex="0">
-          <div class="day-title">
-            <div class="day-bullet">3</div>
-            <div>
-              <div><strong>Dia 3 — Parques & Queijos</strong></div>
-              <div class="small">Passeio em parques e mercado local com queijos e embutidos.</div>
-            </div>
-          </div>
-        </div>
-
-        <footer style="margin-top:12px">
-          <p class="small">Dicas: verifique horários de funcionamento e faça reservas para jantares populares.</p>
-        </footer>
-      </aside>
-
-      <section class="map-wrap panel" aria-label="Mapa interativo">
-        <div id="map" role="region" aria-label="Mapa de Gramado"></div>
-
-        <div class="map-controls" aria-hidden="false">
-          <button class="map-btn" id="btn-zoom-in" title="Aproximar">+</button>
-          <button class="map-btn" id="btn-zoom-out" title="Afastar">−</button>
-          <button class="map-btn" id="btn-locate" title="Localizar">📍</button>
-        </div>
-
-        <div class="map-legend" aria-hidden="true">
-          <div><strong>Legenda</strong></div>
-          <div style="margin-top:6px;">🔴 Restaurante • 🍫 Chocolateria • 🍷 Vinícola</div>
-        </div>
-      </section>
-    </main>
-  </div>
-
-  <!-- Leaflet JS -->
-  <script
-    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-    integrity="sha256-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44c="
-    crossorigin=""
-  ></script>
-
+  <!-- Scripts do Leaflet -->
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script>
-    // Inicialização do mapa (Gramado, RS)
-    (function () {
-      const map = L.map('map', {
-        center: [-29.3733, -50.8764],
-        zoom: 13,
-        zoomControl: false,
-        minZoom: 10,
-      });
+    // Inicializa o mapa
+    var map = L.map('map').setView([-29.365, -50.875], 10);
 
-      // TileLayer público (OpenStreetMap)
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution:
-          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-      }).addTo(map);
+    // Camada base (OpenStreetMap)
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contribuidores'
+    }).addTo(map);
 
-      // Exemplos de pontos (substitua pelos locais reais)
-      const places = [
-        {
-          title: 'Restaurante Exemplo',
-          coords: [-29.3712, -50.8751],
-          icon: '🍽️',
-          description: 'Cardápio regional e ambiente aconchegante.'
-        },
-        {
-          title: 'Chocolateria Famosa',
-          coords: [-29.3745, -50.8790],
-          icon: '🍫',
-          description: 'Degustação de chocolates artesanais.'
-        },
-        {
-          title: 'Vinícola Local',
-          coords: [-29.3660, -50.8840],
-          icon: '🍷',
-          description: 'Degustação de vinhos e visita guiada.'
-        }
-      ];
+    // Marcadores dos destinos
+    var destinos = [
+      { nome: "Centro de Gramado", coords: [-29.3784, -50.8739], desc: "O coração turístico da Serra Gaúcha, cheio de charme e gastronomia." },
+      { nome: "Lago Negro", coords: [-29.3822, -50.8615], desc: "Um dos cartões-postais mais famosos de Gramado, rodeado por pinheiros e flores." },
+      { nome: "Parque do Caracol - Canela", coords: [-29.3196, -50.8576], desc: "Lar da impressionante Cascata do Caracol, com 131 metros de altura." },
+      { nome: "Mundo a Vapor", coords: [-29.3635, -50.8295], desc: "Parque temático que recria o universo das máquinas a vapor com miniaturas em movimento." },
+      { nome: "Rua Coberta", coords: [-29.3787, -50.8762], desc: "Uma rua charmosa com cafés e eventos, ideal para um passeio romântico." },
+      { nome: "Aldeia do Papai Noel", coords: [-29.3798, -50.8752], desc: "A casa oficial do Bom Velhinho no Brasil, com neve artificial e decorações natalinas." },
+      { nome: "Vale dos Vinhedos", coords: [-29.1183, -51.5788], desc: "Região encantadora de vinícolas e gastronomia, entre Bento Gonçalves e Garibaldi." },
+      { nome: "Praia de Torres", coords: [-29.3343, -49.7265], desc: "Uma das praias mais belas do Sul, com falésias e mar azul intenso." }
+    ];
 
-      places.forEach(p => {
-        const marker = L.marker(p.coords).addTo(map);
-        marker.bindPopup('<strong>' + p.title + '</strong><br/>' + p.description);
-      });
-
-      // Custom controls: zoom in/out and geolocate
-      document.getElementById('btn-zoom-in').addEventListener('click', () => map.zoomIn());
-      document.getElementById('btn-zoom-out').addEventListener('click', () => map.zoomOut());
-      document.getElementById('btn-locate').addEventListener('click', () => {
-        if (!navigator.geolocation) {
-          alert('Geolocalização não suportada neste navegador.');
-          return;
-        }
-        navigator.geolocation.getCurrentPosition(
-          (pos) => {
-            const coords = [pos.coords.latitude, pos.coords.longitude];
-            L.circle(coords, { radius: Math.min(200, pos.coords.accuracy || 50), color: '#c76b2a', fill: true, fillOpacity: 0.2 }).addTo(map);
-            map.setView(coords, 14);
-          },
-          (err) => {
-            alert('Não foi possível obter sua localização: ' + (err.message || err.code));
-          },
-          { enableHighAccuracy: true, timeout: 10000 }
-        );
-      });
-
-      // Acessibilidade: foco no mapa com instrução
-      const mapEl = document.getElementById('map');
-      mapEl.tabIndex = 0;
-      mapEl.addEventListener('focus', () => {
-        map.invalidateSize();
-      });
-    })();
+    // Adiciona marcadores ao mapa
+    destinos.forEach(dest => {
+      L.marker(dest.coords)
+        .addTo(map)
+        .bindPopup(`<b>${dest.nome}</b><br>${dest.desc}`);
+    });
   </script>
+
 </body>
 </html>
