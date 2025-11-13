@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Mapa Interativo - Destinos Incríveis do Sul</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- CSS do Leaflet -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <style>
+    body {
+      margin: 0;
+      font-family: "Poppins", sans-serif;
+      background: #f7f7f7;
+      text-align: center;
+    }
+    h1 {
+      margin: 20px;
+      color: #2c3e50;
+    }
+    #map {
+      height: 90vh;
+      width: 100%;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+    .leaflet-popup-content-wrapper {
+      border-radius: 8px;
+      background-color: #fffdfc;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🌎 Destinos Imperdíveis no Sul do Brasil</h1>
+  <div id="map"></div>
+
+  <!-- Scripts do Leaflet -->
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script>
+    // Inicializa o mapa
+    var map = L.map('map').setView([-29.365, -50.875], 10);
+
+    // Camada base (OpenStreetMap)
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contribuidores'
+    }).addTo(map);
+
+    // Marcadores dos destinos
+    var destinos = [
+      { nome: "Centro de Gramado", coords: [-29.3784, -50.8739], desc: "O coração turístico da Serra Gaúcha, cheio de charme e gastronomia." },
+      { nome: "Lago Negro", coords: [-29.3822, -50.8615], desc: "Um dos cartões-postais mais famosos de Gramado, rodeado por pinheiros e flores." },
+      { nome: "Parque do Caracol - Canela", coords: [-29.3196, -50.8576], desc: "Lar da impressionante Cascata do Caracol, com 131 metros de altura." },
+      { nome: "Mundo a Vapor", coords: [-29.3635, -50.8295], desc: "Parque temático que recria o universo das máquinas a vapor com miniaturas em movimento." },
+      { nome: "Rua Coberta", coords: [-29.3787, -50.8762], desc: "Uma rua charmosa com cafés e eventos, ideal para um passeio romântico." },
+      { nome: "Aldeia do Papai Noel", coords: [-29.3798, -50.8752], desc: "A casa oficial do Bom Velhinho no Brasil, com neve artificial e decorações natalinas." },
+      { nome: "Vale dos Vinhedos", coords: [-29.1183, -51.5788], desc: "Região encantadora de vinícolas e gastronomia, entre Bento Gonçalves e Garibaldi." },
+      { nome: "Praia de Torres", coords: [-29.3343, -49.7265], desc: "Uma das praias mais belas do Sul, com falésias e mar azul intenso." }
+    ];
+
+    // Adiciona marcadores ao mapa
+    destinos.forEach(dest => {
+      L.marker(dest.coords)
+        .addTo(map)
+        .bindPopup(`<b>${dest.nome}</b><br>${dest.desc}`);
+    });
+  </script>
+
+</body>
+</html>
